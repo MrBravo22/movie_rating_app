@@ -12,6 +12,20 @@ const App = ()=> {
 
     fetchMovies();
   }, []);
+
+  const increaseRating = async (movie) => {
+    const newRating = movie.stars + 1
+    const response = await axios.put(`/api/movies/${movie.id}`, {title: movie.title, stars: newRating})
+    const newMovies = movies.map((movieMap) => {
+      if(movieMap.id === movie.id) {
+        return response
+      }else {
+        return movieMap;
+      }
+    });
+    setMovies(newMovies)
+  }
+
   return (
     <div>
     <h1>Rotten Potatoes ({ movies.length }) </h1>
@@ -20,7 +34,18 @@ const App = ()=> {
         movies.map( movie => {
           return(
             <li key={ movie.id }>
-              { movie.name }
+              <h2>{ movie.title }</h2>
+              <h3>
+                <span>
+                  Rating: {movie.stars} Stars
+                  <button onClick={() => {increaseRating(movie)}}>
+                    +
+                  </button>
+                  <button>
+                    -
+                  </button>
+                </span>
+              </h3>
             </li>
           );
         })
